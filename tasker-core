@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+# Cotne Nazarashvili aka THECOTNE <cotne.95@gmail.com>
+LOGO="
+████████╗ █████╗ ███████╗██╗  ██╗███████╗██████╗
+╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝██╔════╝██╔══██╗
+   ██║   ███████║███████╗█████╔╝ █████╗  ██████╔╝
+   ██║   ██╔══██║╚════██║██╔═██╗ ██╔══╝  ██╔══██╗
+   ██║   ██║  ██║███████║██║  ██╗███████╗██║  ██║
+   ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝"
+VERSION="1.0"
+PATH="$PATH:./node_modules/.bin:./vendor/bin:./bin"
+COLOR_RED=`tput setaf 1`
+COLOR_GREEN=`tput setaf 2`
+COLOR_BROWN=`tput setaf 3`
+COLOR_RESET=`tput sgr0`
+
+function _longestLineLength { # Display longest line length
+    echo "$1" | awk ' { if ( length > L ) { L=length ;s=$0 } }END{ print L }'
+}
+
+function _logo { # Display LOGO if there is enough space in terminal window
+    if [[  "$(tput cols)" -ge "$(_longestLineLength "${LOGO}")" ]]; then
+        echo "${LOGO}"
+    fi
+}
+
+function _listPublicFunctions { # Display list of public functions definded in current file
+    _listFunctions "/^function ([a-zA-Z][a-zA-Z0-9\_]+)\ \{ \# (.+)/"
+}
+
+function _listAllFunctions { # Display list of all functions definded in current file
+    _listFunctions "/^function ([a-zA-Z0-9\_]+)\ \{ \# (.+)/"
+}
+
+function _listPrivateFunctions { # Display list of private functions definded in current file
+    _listFunctions "/^function (_[a-zA-Z0-9\_]+)\ \{ \# (.+)/"
+}
+
+function _listFunctions { # Display list of functions definded in current file
+    regex="/^function ([a-zA-Z][a-zA-Z0-9\_]+)\ \{ \# (.+)/"
+    length="$(_longestLineLength "$(cat $0 | gawk "match(\$0, $1, a) {print a[1]}")")"
+
+    cat $0 \
+        | gawk "match(\$0, $1, a) {printf(\"%s\t%s\n\", \"\033[34;1m  \" a[1] \"\033[0m\", a[2])}" \
+        | expand -t $((length + 18))
+}
+
+function _error { # Display error message
+    if [ -n "$(type -t cowsay)"  ]; then
+        cowsay "$1"
+        echo ""
+    else
+        echo ""
+        echo "${COLOR_RED}$1${COLOR_RESET}"
+        echo ""
+    fi
+}
+
+function _help { # Display help message
+    _logo
+    echo ""
+    echo "${COLOR_GREEN}Tasker ${COLOR_RESET}version ${COLOR_BROWN}${VERSION}${COLOR_RESET} - Bash alias runner"
+    echo ""
+    echo "${COLOR_BROWN}Usage:${COLOR_RESET}"
+    echo "  $0 command [arguments]"
+    echo ""
+    echo "${COLOR_BROWN}Available commands:${COLOR_RESET}"
+    _listPublicFunctions
+    echo ""
+}
+
+function _bootstrap {
+  if [[ $1 ]]; then
+    if [ -n "$(type -t $1)"  ]; then
+        eval "${@:1}"
+    else
+        _error "Command \"$1\" is not defined."
+    fi
+  else
+      _help
+  fi
+}
+
