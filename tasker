@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 # Cotne Nazarashvili aka THECOTNE <cotne.95@gmail.com>
+# Avtandil Kikabidze aka LONGMAN <akalongman@gmail.com>
+
 source tasker-core
 
 function install { # Install project
