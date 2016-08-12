@@ -1,0 +1,19 @@
+{
+  "name": "tasker",
+  "version": "1.0.0",
+  "description": "bash alias runner",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thecotne/tasker.git"
+  },
+  "author": "cotne nazarashvili <cotne.nazarashvili@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/thecotne/tasker/issues"
+  },
+  "homepage": "https://github.com/thecotne/tasker#readme"
+}
