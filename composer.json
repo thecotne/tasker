@@ -1,0 +1,12 @@
+{
+    "name": "thecotne/tasker",
+    "description": "bash alias runner",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "cotne nazarashvili",
+            "email": "cotne.95@gmail.com"
+        }
+    ],
+    "require": {}
+}
