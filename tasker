@@ -4,11 +4,11 @@ set -e
 source tasker-core
 
 function test1 { # first test
-    echo "first test success"
+  echo "first test success"
 }
 
 function test2 { # second test
-    echo "second test success"
+  echo "second test success"
 }
 
 _bootstrap "${@}"
