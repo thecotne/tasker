@@ -126,4 +126,4 @@ set -o pipefail  # trace ERR through pipes
 set -o errtrace  # trace ERR through 'time command' and other functions
 
 trap '_callStack; exit 1' ERR
-trap 'kill %- 2> /dev/null' EXIT
+trap 'kill %- 2> /dev/null || exit 0' SIGINT
