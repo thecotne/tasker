@@ -15,4 +15,10 @@ function err { # test error
   ffffff
 }
 
+function ignoreError { # test ignore error
+  ! echo "test"
+  ! ffffff
+  echo "no error"
+}
+
 _bootstrap "${@}"
