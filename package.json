@@ -1,5 +1,5 @@
 {
-  "name": "tasker",
+  "name": "@thecotne/tasker",
   "version": "1.0.0",
   "description": "bash alias runner",
   "main": "index.js",
