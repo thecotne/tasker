@@ -6,9 +6,9 @@ bash alias runner
 install via npm
 
 ```bash
-npm install thecotne/tasker --save
+npm install @thecotne/tasker --save
 # or
-npm install thecotne/tasker --save-dev
+npm install @thecotne/tasker --save-dev
 ```
 
 create file `tasker`
@@ -17,11 +17,11 @@ create file `tasker`
 #!/usr/bin/env bash
 set -e
 
-if [ ! -f ./node_modules/tasker/tasker-core ]; then
-    npm install thecotne/tasker
+if [ ! -f ./node_modules/@thecotne/tasker/tasker-core ]; then
+    npm install @thecotne/tasker
 fi
 
-source ./node_modules/tasker/tasker-core
+source ./node_modules/@thecotne/tasker/tasker-core
 
 function test1 { # first test
     echo "first test success"
