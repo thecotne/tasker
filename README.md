@@ -1,38 +1,20 @@
 # tasker
 bash alias runner
 
-## install
+## Getting started
 
-install via npm
+install `tasker-cli` globally
 
 ```bash
-npm install @thecotne/tasker --save
+npm install @thecotne/tasker --global
 # or
-npm install @thecotne/tasker --save-dev
+yarn global add @thecotne/tasker
 ```
 
-create file `tasker`
+use `tasker-cli` to install tasker locally
 
 ```bash
-#!/usr/bin/env bash
-set -e
-
-if [ ! -f ./node_modules/@thecotne/tasker/tasker-core ]; then
-    npm install @thecotne/tasker
-fi
-
-source ./node_modules/@thecotne/tasker/tasker-core
-
-function test1 { # first test
-    echo "first test success"
-}
-
-function test2 { # second test
-    echo "second test success"
-}
-
-_bootstrap "${@}"
-
+tasker-cli init
 ```
 
 ## autocomplete
