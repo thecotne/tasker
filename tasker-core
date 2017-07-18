@@ -32,6 +32,7 @@ LOGO="
    ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝"
 VERSION="1.1"
 PATH="./node_modules/.bin:./vendor/bin:./bin:$PATH"
+TASKER_FILE="${TASKER_FILE:-$0}"
 
 function _awk {
   if hash gawk 2>/dev/null; then
@@ -94,7 +95,7 @@ function _help { # Display help message
   echo "${green}Tasker ${rc}version ${yellow}${VERSION}${rc} - Bash alias runner"
   echo ""
   echo "${yellow}Usage:${rc}"
-  echo "  $0 command [arguments]"
+  echo "  $TASKER_FILE command [arguments]"
   echo ""
   echo "${yellow}Available commands:${rc}"
   _listPublicFunctions --color
