@@ -15,7 +15,7 @@ while [[ -h $SELF_PATH ]]; do
     SELF_PATH=$(cd "$DIR" && cd "$(dirname -- "$SYM")" && pwd)/$(basename -- "$SYM")
 done
 
-source $SELF_PATH/tasker-core
+source $(dirname $SELF_PATH)/tasker-core
 
 function init { # add tasker in current project
   local installMethod=$(_install-method)
