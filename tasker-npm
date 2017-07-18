@@ -7,11 +7,11 @@ fi
 
 source ./node_modules/@thecotne/tasker/tasker-core
 
-function task-name-one { # task description one
+function taskNameOne { # task description one
     echo "doing task one"
 }
 
-function task-name-two { # task description two
+function taskNameTwo { # task description two
     echo "doing task two"
 }
 
