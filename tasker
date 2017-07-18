@@ -1,24 +1,56 @@
 #!/usr/bin/env bash
 set -e
 
-source tasker-core
+source $(dirname $0)/tasker-core
 
-function test1 { # first test
-  echo "first test success"
+function init { # add tasker in current project
+  local installMethod=$(_install-method)
+  local packageManager=$(_package-manager $installMethod)
+
+  _install-tasker $installMethod
+  _create-tasker $packageManager
 }
 
-function test2 { # second test
-  echo "second test success"
+function _install-method {
+  whiptail \
+    --title "how to install?" \
+    --menu "" 11 60 4 \
+    1 "yarn add @thecotne/tasker" \
+    2 "yarn add @thecotne/tasker --dev" \
+    3 "npm install @thecotne/tasker --save" \
+    4 "npm install @thecotne/tasker --save-dev" \
+    2>&1 >/dev/tty
 }
 
-function err { # test error
-  ffffff
+function _package-manager {
+  if [[ $1 -eq 1 || $1 -eq 2 ]]; then
+    echo "yarn"
+  elif [[ $1 -eq 3 || $1 -eq 4 ]]; then
+    echo "npm"
+  else
+    exit 0
+  fi
 }
 
-function ignoreError { # test ignore error
-  ! echo "test"
-  ! ffffff
-  echo "no error"
+function _install-tasker {
+  case $1 in
+    1)
+      yarn add @thecotne/tasker
+      ;;
+    2)
+      yarn add @thecotne/tasker --dev
+      ;;
+    3)
+      npm install @thecotne/tasker --save
+      ;;
+    4)
+      npm install @thecotne/tasker --save-dev
+      ;;
+  esac
+}
+
+function _create-tasker {
+  cp "./node_modules/@thecotne/tasker/takser-$1" tasker
 }
 
 _bootstrap "${@}"
