@@ -10,7 +10,7 @@ npm install @thecotne/tasker --global
 # or
 yarn global add @thecotne/tasker
 # or
-yarn composer require thecotne/tasker
+composer require thecotne/tasker
 ```
 
 use `tasker-cli` to install tasker locally
