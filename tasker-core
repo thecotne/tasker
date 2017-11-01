@@ -1,5 +1,28 @@
 #!/usr/bin/env bash
 # Cotne Nazarashvili aka THECOTNE <cotne.95@gmail.com>
+# Avtandil Kikabidze aka LONGMAN <akalongman@gmail.com>
+
+if [[ "$TERM" != "" ]] && [[ "$TERM" != "dumb" ]]; then
+  black=$(tput setaf 0)
+  red=$(tput setaf 1)
+  green=$(tput setaf 2)
+  yellow=$(tput setaf 3)
+  blue=$(tput setaf 4)
+  magenta=$(tput setaf 5)
+  cyan=$(tput setaf 6)
+  white=$(tput setaf 7)
+
+  bgBlack=$(tput setab 0)
+  bgRed=$(tput setab 1)
+  bgGreen=$(tput setab 2)
+  bgYellow=$(tput setab 3)
+  bgBlue=$(tput setab 4)
+  bgMagenta=$(tput setab 5)
+  bgCyan=$(tput setab 6)
+  bgWhite=$(tput setab 7)
+  rc=$(tput sgr0) # Reset Color
+fi
+
 LOGO="
 ████████╗ █████╗ ███████╗██╗  ██╗███████╗██████╗
 ╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝██╔════╝██╔══██╗
@@ -7,77 +30,103 @@ LOGO="
    ██║   ██╔══██║╚════██║██╔═██╗ ██╔══╝  ██╔══██╗
    ██║   ██║  ██║███████║██║  ██╗███████╗██║  ██║
    ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝"
-VERSION="1.0"
-PATH="$PATH:./node_modules/.bin:./vendor/bin:./bin"
-COLOR_RED=`tput setaf 1`
-COLOR_GREEN=`tput setaf 2`
-COLOR_BROWN=`tput setaf 3`
-COLOR_RESET=`tput sgr0`
+VERSION="1.1"
+PATH="./node_modules/.bin:./vendor/bin:./bin:$PATH"
+TASKER_FILE="${TASKER_FILE:-$0}"
+
+function _awk {
+  if hash gawk 2>/dev/null; then
+    gawk "$@"
+  else
+    awk "$@"
+  fi
+}
 
 function _longestLineLength { # Display longest line length
-    echo "$1" | awk ' { if ( length > L ) { L=length ;s=$0 } }END{ print L }'
+  echo "$1" | _awk ' { if ( length > L ) { L=length ;s=$0 } }END{ print L }'
 }
 
 function _logo { # Display LOGO if there is enough space in terminal window
-    if [[  "$(tput cols)" -ge "$(_longestLineLength "${LOGO}")" ]]; then
-        echo "${LOGO}"
-    fi
+  if [[  "$(tput cols)" -ge "$(_longestLineLength "${LOGO}")" ]]; then
+    echo "${LOGO}"
+  fi
 }
 
 function _listPublicFunctions { # Display list of public functions definded in current file
-    _listFunctions "/^function ([a-zA-Z][a-zA-Z0-9\_]+)\ \{ \# (.+)/"
+  _listFunctions "/^function ([a-zA-Z][a-zA-Z0-9\-\_]+)\ \{ \# (.+)/" $1
 }
 
 function _listAllFunctions { # Display list of all functions definded in current file
-    _listFunctions "/^function ([a-zA-Z0-9\_]+)\ \{ \# (.+)/"
+  _listFunctions "/^function ([a-zA-Z0-9\-\_]+)\ \{ \# (.+)/" $1
 }
 
 function _listPrivateFunctions { # Display list of private functions definded in current file
-    _listFunctions "/^function (_[a-zA-Z0-9\_]+)\ \{ \# (.+)/"
+  _listFunctions "/^function (_[a-zA-Z0-9\-\_]+)\ \{ \# (.+)/" $1
 }
 
 function _listFunctions { # Display list of functions definded in current file
-    regex="/^function ([a-zA-Z][a-zA-Z0-9\_]+)\ \{ \# (.+)/"
-    length="$(_longestLineLength "$(cat $0 | gawk "match(\$0, $1, a) {print a[1]}")")"
+  local regex="/^function ([a-zA-Z][a-zA-Z0-9\-\_]+)\ \{ \# (.+)/"
+  local length="$(_longestLineLength "$(cat $0 | _awk "match(\$0, $1, a) {print a[1]}")")"
 
-    cat $0 \
-        | gawk "match(\$0, $1, a) {printf(\"%s\t%s\n\", \"\033[34;1m  \" a[1] \"\033[0m\", a[2])}" \
-        | expand -t $((length + 18))
+  if [[ "$2" != "--color" ]]; then
+    local green=""
+    local rc=""
+  fi
+
+  cat $0 \
+    | _awk "match(\$0, $1, a) {printf(\"%s\t%s\n\", \"${green}  \" a[1] \"${rc}\", a[2])}" \
+    | expand -t $((length + 18))
 }
 
 function _error { # Display error message
-    if [ -n "$(type -t cowsay)"  ]; then
-        cowsay "$1"
-        echo ""
-    else
-        echo ""
-        echo "${COLOR_RED}$1${COLOR_RESET}"
-        echo ""
-    fi
+  if [ -n "$(type -t cowsay)"  ]; then
+    cowsay "$1"
+    echo ""
+  else
+    echo ""
+    echo "${red}$1${rc}"
+    echo ""
+  fi
 }
 
 function _help { # Display help message
-    _logo
-    echo ""
-    echo "${COLOR_GREEN}Tasker ${COLOR_RESET}version ${COLOR_BROWN}${VERSION}${COLOR_RESET} - Bash alias runner"
-    echo ""
-    echo "${COLOR_BROWN}Usage:${COLOR_RESET}"
-    echo "  $0 command [arguments]"
-    echo ""
-    echo "${COLOR_BROWN}Available commands:${COLOR_RESET}"
-    _listPublicFunctions
-    echo ""
+  _logo
+  echo ""
+  echo "${green}Tasker ${rc}version ${yellow}${VERSION}${rc} - Bash alias runner"
+  echo ""
+  echo "${yellow}Usage:${rc}"
+  echo "  $TASKER_FILE command [arguments]"
+  echo ""
+  echo "${yellow}Available commands:${rc}"
+  _listPublicFunctions --color
+  echo ""
 }
 
 function _bootstrap {
   if [[ $1 ]]; then
     if [ -n "$(type -t $1)"  ]; then
-        eval "${@:1}"
+      eval "${@:1}"
     else
-        _error "Command \"$1\" is not defined."
+      _error "Command \"$1\" is not defined."
     fi
   else
-      _help
+    _help
   fi
 }
 
+function _callStack {
+  local i=0
+  local frames=${#BASH_LINENO[@]}
+
+  for ((i=frames-4; i>=0; i--)); do
+    echo "  File" \"${BASH_SOURCE[i+1]}\", line ${BASH_LINENO[i]}, in ${FUNCNAME[i+1]}
+
+    sed -n "${BASH_LINENO[i]}{s/^/    /;p}" "${BASH_SOURCE[i+1]}"
+  done
+}
+
+set -o pipefail  # trace ERR through pipes
+set -o errtrace  # trace ERR through 'time command' and other functions
+
+trap '_callStack; exit 1' ERR
+trap 'kill %- 2> /dev/null || exit 0' SIGINT
