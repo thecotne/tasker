@@ -1,21 +1,9 @@
 #!/usr/bin/env zsh
 
-function _awk {
-  if hash gawk 2>/dev/null; then
-    gawk "$@"
-  else
-    awk "$@"
-  fi
-}
-
 # Tasker basic command completion
-_tasker_get_command_list () {
-    tasker _listPublicFunctions | _awk '/^ +[a-zA-Z0-9\-\_]+/ { print $1 }'
-}
-
 _tasker () {
     if [ -f tasker ]; then
-        compadd `_tasker_get_command_list`
+        compadd `tasker _listAutoCompleteFunctions`
     fi
 }
 
