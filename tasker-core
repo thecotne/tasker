@@ -52,6 +52,10 @@ function _logo { # Display LOGO if there is enough space in terminal window
   fi
 }
 
+function _listAutoCompleteFunctions { # Display list of public functions for autocomplete
+  _listPublicFunctions | _awk '/^ +[a-zA-Z0-9\-\_]+/ { print $1 }'
+}
+
 function _listPublicFunctions { # Display list of public functions definded in current file
   _listFunctions "/^function ([a-zA-Z][a-zA-Z0-9\-\_]+)\ \{ \# (.+)/" $1
 }

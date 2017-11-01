@@ -1,14 +1,16 @@
-# tasker
-bash alias runner
+# Tasker
+Bash alias runner
 
 ## Getting started
 
-install `tasker-cli` globally
+Install `tasker-cli` globally
 
 ```bash
 npm install @thecotne/tasker --global
 # or
 yarn global add @thecotne/tasker
+# or
+composer require thecotne/tasker
 ```
 
 use `tasker-cli` to install tasker locally
@@ -17,9 +19,15 @@ use `tasker-cli` to install tasker locally
 tasker-cli init
 ```
 
-## autocomplete
+## Autocomplete
 
-for zsh you can add this to your `.zshrc`
+For bash you can add this to your `.profile`
+
+```bash
+source /path/to/tasker/bash-comp
+```
+
+For zsh you can add this to your `.zshrc`
 
 ```bash
 source /path/to/tasker/zsh-comp
