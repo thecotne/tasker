@@ -2,17 +2,17 @@
 set -e
 
 if [ ! -f ./vendor/thecotne/tasker/tasker-core ]; then
-    composer require thecotne/tasker
+  composer require thecotne/tasker
 fi
 
 source ./vendor/thecotne/tasker/tasker-core
 
 function taskNameOne { # task description one
-    echo "doing task one"
+  echo "doing task one"
 }
 
 function taskNameTwo { # task description two
-    echo "doing task two"
+  echo "doing task two"
 }
 
 _bootstrap "${@}"

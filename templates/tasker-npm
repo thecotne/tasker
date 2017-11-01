@@ -2,17 +2,17 @@
 set -e
 
 if [ ! -f ./node_modules/@thecotne/tasker/tasker-core ]; then
-    npm install
+  npm install
 fi
 
 source ./node_modules/@thecotne/tasker/tasker-core
 
 function taskNameOne { # task description one
-    echo "doing task one"
+  echo "doing task one"
 }
 
 function taskNameTwo { # task description two
-    echo "doing task two"
+  echo "doing task two"
 }
 
 _bootstrap "${@}"

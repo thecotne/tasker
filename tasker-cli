@@ -5,14 +5,14 @@ set -e
 SELF_PATH=$(cd -P -- "$(dirname -- "$0")" && pwd -P) && SELF_PATH=$SELF_PATH/$(basename -- "$0")
 
 # resolve symlinks
-while [[ -h $SELF_PATH ]]; do
-    # 1) cd to directory of the symlink
-    # 2) cd to the directory of where the symlink points
-    # 3) get the pwd
-    # 4) append the basename
-    DIR=$(dirname -- "$SELF_PATH")
-    SYM=$(readlink "$SELF_PATH")
-    SELF_PATH=$(cd "$DIR" && cd "$(dirname -- "$SYM")" && pwd)/$(basename -- "$SYM")
+while [[ -L $SELF_PATH ]]; do
+  # 1) cd to directory of the symlink
+  # 2) cd to the directory of where the symlink points
+  # 3) get the pwd
+  # 4) append the basename
+  DIR=$(dirname -- "$SELF_PATH")
+  SYM=$(readlink "$SELF_PATH")
+  SELF_PATH=$(cd "$DIR" && cd "$(dirname -- "$SYM")" && pwd)/$(basename -- "$SYM")
 done
 
 TASKER_FILE="tasker-cli"
@@ -30,7 +30,7 @@ function init { # add tasker in current project
 function _install-method {
   whiptail \
     --title "how to install?" \
-    --menu "" 11 60 4 \
+    --menu "" 13 60 6 \
     1 "yarn add @thecotne/tasker" \
     2 "yarn add @thecotne/tasker --dev" \
     3 "npm install @thecotne/tasker --save" \
@@ -54,29 +54,29 @@ function _package-manager {
 
 function _install-tasker {
   case $1 in
-    1)
-      yarn add @thecotne/tasker
-      ;;
-    2)
-      yarn add @thecotne/tasker --dev
-      ;;
-    3)
-      npm install @thecotne/tasker --save
-      ;;
-    4)
-      npm install @thecotne/tasker --save-dev
-      ;;
-    5)
-      composer require thecotne/tasker
-      ;;
-    6)
-      composer require --dev thecotne/tasker
-      ;;
+  1)
+    yarn add @thecotne/tasker
+    ;;
+  2)
+    yarn add @thecotne/tasker --dev
+    ;;
+  3)
+    npm install @thecotne/tasker --save
+    ;;
+  4)
+    npm install @thecotne/tasker --save-dev
+    ;;
+  5)
+    composer require thecotne/tasker
+    ;;
+  6)
+    composer require --dev thecotne/tasker
+    ;;
   esac
 }
 
 function _create-tasker {
-  cp "./node_modules/@thecotne/tasker/tasker-$1" tasker
+  cp "$(dirname $SELF_PATH)/templates/tasker-$1" tasker
 }
 
 _bootstrap "${@}"

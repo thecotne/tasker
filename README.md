@@ -21,15 +21,15 @@ tasker-cli init
 
 ## Autocomplete
 
-For bash you can add this to your `.profile`
+For bash you can add this to your `.bashrc`
 
 ```bash
-source /path/to/tasker/bash-comp
+source /path/to/tasker/completions/bash-comp
 ```
 
 For zsh you can add this to your `.zshrc`
 
 ```bash
-source /path/to/tasker/zsh-comp
+source /path/to/tasker/completions/zsh-comp
 ```
 

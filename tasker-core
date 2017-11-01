@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
-# Cotne Nazarashvili aka THECOTNE <cotne.95@gmail.com>
-# Avtandil Kikabidze aka LONGMAN <akalongman@gmail.com>
 
-if [[ "$TERM" != "" ]] && [[ "$TERM" != "dumb" ]]; then
+if [[ $TERM != "" ]] && [[ $TERM != "dumb" ]]; then
   black=$(tput setaf 0)
   red=$(tput setaf 1)
   green=$(tput setaf 2)
@@ -30,7 +28,7 @@ LOGO="
    ██║   ██╔══██║╚════██║██╔═██╗ ██╔══╝  ██╔══██╗
    ██║   ██║  ██║███████║██║  ██╗███████╗██║  ██║
    ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝"
-VERSION="1.1"
+VERSION="1.2"
 PATH="./node_modules/.bin:./vendor/bin:./bin:$PATH"
 TASKER_FILE="${TASKER_FILE:-$0}"
 
@@ -47,7 +45,7 @@ function _longestLineLength { # Display longest line length
 }
 
 function _logo { # Display LOGO if there is enough space in terminal window
-  if [[  "$(tput cols)" -ge "$(_longestLineLength "${LOGO}")" ]]; then
+  if [[ "$(tput cols)" -ge "$(_longestLineLength "${LOGO}")" ]]; then
     echo "${LOGO}"
   fi
 }
@@ -72,18 +70,18 @@ function _listFunctions { # Display list of functions definded in current file
   local regex="/^function ([a-zA-Z][a-zA-Z0-9\-\_]+)\ \{ \# (.+)/"
   local length="$(_longestLineLength "$(cat $0 | _awk "match(\$0, $1, a) {print a[1]}")")"
 
-  if [[ "$2" != "--color" ]]; then
+  if [[ $2 != "--color" ]]; then
     local green=""
     local rc=""
   fi
 
-  cat $0 \
-    | _awk "match(\$0, $1, a) {printf(\"%s\t%s\n\", \"${green}  \" a[1] \"${rc}\", a[2])}" \
-    | expand -t $((length + 18))
+  cat $0 |
+    _awk "match(\$0, $1, a) {printf(\"%s\t%s\n\", \"${green}  \" a[1] \"${rc}\", a[2])}" |
+    expand -t $((length + 18))
 }
 
 function _error { # Display error message
-  if [ -n "$(type -t cowsay)"  ]; then
+  if [ -n "$(type -t cowsay)" ]; then
     cowsay "$1"
     echo ""
   else
@@ -108,7 +106,7 @@ function _help { # Display help message
 
 function _bootstrap {
   if [[ $1 ]]; then
-    if [ -n "$(type -t $1)"  ]; then
+    if [ -n "$(type -t $1)" ]; then
       eval "${@:1}"
     else
       _error "Command \"$1\" is not defined."
@@ -122,15 +120,15 @@ function _callStack {
   local i=0
   local frames=${#BASH_LINENO[@]}
 
-  for ((i=frames-4; i>=0; i--)); do
-    echo "  File" \"${BASH_SOURCE[i+1]}\", line ${BASH_LINENO[i]}, in ${FUNCNAME[i+1]}
+  for ((i = frames - 4; i >= 0; i--)); do
+    echo "  File" \"${BASH_SOURCE[i + 1]}\", line ${BASH_LINENO[i]}, in ${FUNCNAME[i + 1]}
 
-    sed -n "${BASH_LINENO[i]}{s/^/    /;p}" "${BASH_SOURCE[i+1]}"
+    sed -n "${BASH_LINENO[i]}{s/^/    /;p}" "${BASH_SOURCE[i + 1]}"
   done
 }
 
-set -o pipefail  # trace ERR through pipes
-set -o errtrace  # trace ERR through 'time command' and other functions
+set -o pipefail # trace ERR through pipes
+set -o errtrace # trace ERR through 'time command' and other functions
 
 trap '_callStack; exit 1' ERR
 trap 'kill %- 2> /dev/null || exit 0' SIGINT
