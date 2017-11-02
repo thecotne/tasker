@@ -1,9 +1,7 @@
 #!/usr/bin/env zsh
 
 function _tasker_completions {
-  if [ -f ./tasker ]; then
-    compadd $(./tasker _listAutoCompleteFunctions)
-  fi
+  compadd $(tasker _listAutoCompleteFunctions 2>/dev/null)
 }
 
 compdef _tasker_completions tasker

@@ -1,6 +1,6 @@
 {
   "name": "@thecotne/tasker",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "bash alias runner",
   "bin": {
     "tasker-cli": "./tasker-cli"

@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
 
 function _tasker_completions {
-  if [ -f ./tasker ]; then
-    local current="${COMP_WORDS[COMP_CWORD]}"
-    local completions=$(./tasker _listAutoCompleteFunctions)
+  local current="${COMP_WORDS[COMP_CWORD]}"
+  local completions=$(tasker _listAutoCompleteFunctions 2>/dev/null)
 
-    COMPREPLY=($(compgen -W "$completions" -- "$current"))
-  fi
+  COMPREPLY=($(compgen -W "$completions" -- "$current"))
 }
 
 complete -o nospace -F _tasker_completions tasker
