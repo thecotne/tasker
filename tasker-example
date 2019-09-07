@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -e
+
+source ./tasker-core
+
+function taskNameOne { # task description one
+  echo "doing task one"
+}
+
+function taskNameTwo { # task description two
+  echo "doing task two"
+}
+
+_bootstrap "${@}"

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+source ./commands/index
 
 if [[ $TERM != "" ]] && [[ $TERM != "dumb" ]]; then
   black=$(tput setaf 0)
@@ -28,56 +29,30 @@ LOGO="
    ██║   ██╔══██║╚════██║██╔═██╗ ██╔══╝  ██╔══██╗
    ██║   ██║  ██║███████║██║  ██╗███████╗██║  ██║
    ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝"
-VERSION="1.2"
+VERSION="1.3"
 PATH="./node_modules/.bin:./vendor/bin:./bin:$PATH"
 TASKER_FILE="${TASKER_FILE:-$0}"
 
-function _awk {
-  if hash gawk 2>/dev/null; then
-    gawk "$@"
-  else
-    awk "$@"
-  fi
-}
-
-function _longestLineLength { # Display longest line length
-  echo "$1" | _awk ' { if ( length > L ) { L=length ;s=$0 } }END{ print L }'
-}
-
 function _logo { # Display LOGO if there is enough space in terminal window
-  if [[ "$(tput cols)" -ge "$(_longestLineLength "${LOGO}")" ]]; then
+  if [[ "$(tput cols)" -ge "$(echo $LOGO | _longestLineLength)" ]]; then
     echo "${LOGO}"
   fi
 }
 
 function _listAutoCompleteFunctions { # Display list of public functions for autocomplete
-  _listPublicFunctions | _awk '/^ +[a-zA-Z0-9\-\_]+/ { print $1 }'
+  _listFunctions $0 "^function ([a-zA-Z][a-zA-Z0-9\-\_]+)\ \{ \# (.+)" --names
 }
 
 function _listPublicFunctions { # Display list of public functions definded in current file
-  _listFunctions "/^function ([a-zA-Z][a-zA-Z0-9\-\_]+)\ \{ \# (.+)/" $1
+  _listFunctions $0 "^function ([a-zA-Z][a-zA-Z0-9\-\_]+)\ \{ \# (.+)" $1
 }
 
 function _listAllFunctions { # Display list of all functions definded in current file
-  _listFunctions "/^function ([a-zA-Z0-9\-\_]+)\ \{ \# (.+)/" $1
+  _listFunctions $0 "^function ([a-zA-Z0-9\-\_]+)\ \{ \# (.+)" $1
 }
 
 function _listPrivateFunctions { # Display list of private functions definded in current file
-  _listFunctions "/^function (_[a-zA-Z0-9\-\_]+)\ \{ \# (.+)/" $1
-}
-
-function _listFunctions { # Display list of functions definded in current file
-  local regex="/^function ([a-zA-Z][a-zA-Z0-9\-\_]+)\ \{ \# (.+)/"
-  local length="$(_longestLineLength "$(cat $0 | _awk "match(\$0, $1, a) {print a[1]}")")"
-
-  if [[ $2 != "--color" ]]; then
-    local green=""
-    local rc=""
-  fi
-
-  cat $0 |
-    _awk "match(\$0, $1, a) {printf(\"%s\t%s\n\", \"${green}  \" a[1] \"${rc}\", a[2])}" |
-    expand -t $((length + 18))
+  _listFunctions $0 "^function (_[a-zA-Z0-9\-\_]+)\ \{ \# (.+)" $1
 }
 
 function _error { # Display error message

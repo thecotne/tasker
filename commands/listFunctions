@@ -1,0 +1,38 @@
+#!/usr/bin/env node
+const fs = require('fs')
+
+const fileName = process.argv[2]
+const pattern = process.argv[3]
+const color = process.argv[4] === '--color'
+const onlyNames = process.argv[4] === '--names'
+
+const lines = fs.readFileSync(fileName).toString().split('\n')
+
+let maxNameLength = 0
+const functions = []
+
+lines.forEach(line => {
+  const match = line.match(new RegExp(pattern))
+
+  if (match) {
+    functions.push({
+      name: match[1],
+      description: match[2]
+    })
+    if (match[1].length > maxNameLength) {
+      maxNameLength = match[1].length
+    }
+  }
+})
+
+// https://stackoverflow.com/a/41407246/1946607
+const fnColor = color ? '\x1b[32m' : ''
+const resetColor = color ? '\x1b[0m' : ''
+
+functions.forEach(fn => {
+  if (onlyNames) {
+    console.log(fn.name)
+  } else {
+    console.log(`  ${fnColor}${fn.name.padEnd(30)}${resetColor}${fn.description}`)
+  }
+})

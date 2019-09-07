@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -e
+
+_TCS_SELF_DIR=$(cd -P -- "${BASH_SOURCE%/*}" && pwd -P)
+
+function _longestLineLength {
+  "$_TCS_SELF_DIR/longestLineLength" "$@"
+}
+function _listFunctions {
+  "$_TCS_SELF_DIR/listFunctions" "$@"
+}
