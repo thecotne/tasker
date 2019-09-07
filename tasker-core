@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-source ./commands/index
+_TC_SELF_DIR=$(cd -P -- "${BASH_SOURCE%/*}" && pwd -P)
+
+source "$_TC_SELF_DIR/commands/index"
 
 if [[ $TERM != "" ]] && [[ $TERM != "dumb" ]]; then
   black=$(tput setaf 0)
