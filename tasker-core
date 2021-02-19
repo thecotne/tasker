@@ -94,14 +94,21 @@ function _bootstrap {
 }
 
 function _callStack {
-  local i=0
-  local frames=${#BASH_LINENO[@]}
-
-  for ((i = frames - 4; i >= 0; i--)); do
-    echo "  File" \"${BASH_SOURCE[i + 1]}\", line ${BASH_LINENO[i]}, in ${FUNCNAME[i + 1]}
-
-    sed -n "${BASH_LINENO[i]}{s/^/    /;p}" "${BASH_SOURCE[i + 1]}"
-  done
+  local err=$?
+  set +o xtrace
+  local code="${1:-1}"
+  echo "Error in ${BASH_SOURCE[1]}:${BASH_LINENO[0]}. '${BASH_COMMAND}' exited with status $err"
+  # Print out the stack trace described by $function_stack
+  if [ ${#FUNCNAME[@]} -gt 2 ]
+  then
+    echo "Call tree:"
+    for ((i=1;i<${#FUNCNAME[@]}-1;i++))
+    do
+      echo " $i: ${BASH_SOURCE[$i+1]}:${BASH_LINENO[$i]} ${FUNCNAME[$i]}(...)"
+    done
+  fi
+  echo "Exiting with status ${code}"
+  exit "${code}"
 }
 
 set -o pipefail # trace ERR through pipes
