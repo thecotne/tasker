@@ -9,6 +9,7 @@ function taskNameOne { # task description one
 
 function taskNameTwo { # task description two
   echo "doing task two"
+  cotne
 }
 
 _bootstrap "${@}"
